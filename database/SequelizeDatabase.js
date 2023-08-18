@@ -3,9 +3,9 @@ import SQLite from 'sqlite3';
 
 class SequelizeDatabase {
     #instance;
-    #path = './database.db3';
+    #path;
 
-    constructor(path) {
+    constructor(path = './database.db3') {
         this.#path = path;
         this.#instance = new Sequelize({
             dialect: 'sqlite',
@@ -31,8 +31,8 @@ class SequelizeDatabase {
 }
 
 // Inicializar e modelar o banco de dados
-const sequelizeDB = new SequelizeDatabase(SequelizeDatabase.DATABASE_NAME, SequelizeDatabase.DATABASE_USER, SequelizeDatabase.DATABASE_PASSWORD);
-const pacienteColumn = sequelizeDB.instance.define("paciente", {
+const sequelizeDB = new SequelizeDatabase();
+const pacienteColumn = await sequelizeDB.instance.define("paciente", {
     cpf: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -46,19 +46,21 @@ const pacienteColumn = sequelizeDB.instance.define("paciente", {
     },
 });
 
-const consultaColumn = sequelizeDB.instance.define("consulta", {
+const consultaColumn = await sequelizeDB.instance.define("consulta", {
     cpf: {
         type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
     },
     dataConsulta:{
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
     },
     dataFim: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
     },
 });
+
+sequelizeDB.testarConexaoComBD();
 
 pacienteColumn.sync();
 consultaColumn.sync();

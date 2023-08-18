@@ -1,16 +1,7 @@
 import PromptSync from 'prompt-sync'
-
-
-
-
-
-
-
-
-
-
-
-
+import Consultorio from './model/Consultorio.js';
+import session from './session/session.js';
+import CPF from './model/CPF.js';
 
 /* Basicamente uma enumeração.
  */
@@ -33,16 +24,16 @@ class Estados {
  */
 class CLI {
     estadoAtual;
+    #session;
     #estadoAnterior;
-    #consultorio;
     quit = false;
     string_layout1 = ["Menu Principal", "1-Cadastro de pacientes", "2-Agenda", "3-Fim", ""];
     string_layout2 = ["Menu do Cadastro de Pacientes","1-Cadastrar novo paciente", "2-Excluir paciente", "3-Listar pacientes (ordenado por CPF)", "4-Listar pacientes (ordenado por nome)", "5-Voltar p/ menu principal", ""];
     string_layout3 = ["Agenda", "1-Agendar consulta", "2-Cancelar agendamento", "3-Listar agenda", "4-Voltar p/ menu principal", ""];
 
     constructor() {
+        this.#session = session;
         this.estadoAtual = Estados.MENU;
-        this.#consultorio = new Consultorio();
     }
 
     rodar() {
@@ -103,7 +94,7 @@ class CLI {
                 default:
                     resultado = this;
             }
-        }
+        } this.#session.updateDatabase();
     }
 
     static print(array) {
@@ -195,7 +186,7 @@ class CLI {
         } while (!dataValida) {
             dados[2] = this.input("Data de nascimento: ");
             dataValida = this.testaNascimento(dados[2]);
-        } this.#consultorio.cadastrar(dados[0],dados[1],dados[2]);
+        } this.#session.Consultorio.cadastrar(dados[0],dados[1],dados[2]);
         console.log("Paciente cadastrado com sucesso!\n")
 
         return Estados.CADASTRO;
@@ -208,19 +199,19 @@ class CLI {
         while (!cpfValido) {
             cpf = this.input("CPF: ");
             cpfValido = this.testaCPF(cpf);
-        } this.#consultorio.descadastrar(cpf);
+        } this.#session.Consultorio.descadastrar(cpf);
         console.log("Paciente excluído com sucesso!\n");
         return Estados.CADASTRO;
     }
 
     listarPacientes() {
-        let mapa = new Map([...this.#consultorio.cadastros].sort( this.comparaPacientes ));
+        let mapa = new Map([...this.#session.Consultorio.cadastros].sort( this.comparaPacientes ));
         this.imprimeMapa(mapa);
         return Estados.CADASTRO;
     }
 
     listarCPFs() {
-        let mapa = new Map([...this.#consultorio.cadastros].sort( this.comparaPacientesPorCPF ));
+        let mapa = new Map([...this.#session.Consultorio.cadastros].sort( this.comparaPacientesPorCPF ));
         this.imprimeMapa(mapa);
         return Estados.CADASTRO;
     }
@@ -253,7 +244,7 @@ class CLI {
         }
 
         try {
-            this.#consultorio.agendarConsulta(cpf,data,hInicial,hFinal);
+            this.#session.Consultorio.agendarConsulta(cpf,data,hInicial,hFinal);
             console.log("Agendamento realizado com sucesso!\n");
         } catch (erro) {
             console.log("\nErro: " + erro.message);
@@ -281,7 +272,7 @@ class CLI {
         }
 
         try {
-            if ( !this.#consultorio.cancelarConsulta(cpf, data, hInicial) ) {
+            if ( !this.#session.Consultorio.cancelarConsulta(cpf, data, hInicial) ) {
                 console.log("\nErro: agendamento não encontrado");
             } else {
                 console.log("\nErro: agendamento cancelado com sucesso!");
@@ -334,7 +325,7 @@ class CLI {
         let lista = [];
         let inicio = Validacao.criaData(dataInicial);
         let fim = Validacao.criaData(dataFinal);
-        for (let consulta of this.#consultorio.consultas) {
+        for (let consulta of this.#session.Consultorio.consultas) {
             if (consulta.data_da_consulta >= inicio && consulta.dataConsulta <= fim) {
                 lista.push(consulta);
             }
@@ -346,14 +337,14 @@ class CLI {
         console.log("Data".padStart(7," ") + "H.Ini".padStart(9," ") + "H.Fim".padStart(6," ") + "Tempo".padStart(6," ") + "Nome".padStart(5," ") + "Dt.Nasc.".padStart(27," "));
         console.log("".padEnd(61,"-"));
         for (let consulta of lista) {
-            let paciente = this.#consultorio.buscarPaciente(consulta.cpf);
+            let paciente = this.#session.Consultorio.buscarPaciente(consulta.cpf);
             console.log(consulta.dataString.padEnd(11," ") + consulta.horario_inicial_string.padEnd(6," ") + consulta.horario_final_string.padEnd(6," ") + "".padEnd(6," ") + paciente.nome.padEnd(17," ") + paciente.nascimentoStringo.padEnd(11," "));
         }
         console.log("".padEnd(61,"-"));
     }
 
     testaCPF(cpf) {
-        if (this.#consultorio.buscarPaciente(cpf) !== undefined) {
+        if (this.#session.Consultorio.buscarPaciente(cpf) !== undefined) {
             console.log("Erro: CPF já cadastrado");
         }
         try {

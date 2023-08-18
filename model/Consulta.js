@@ -16,8 +16,14 @@ class Consulta {
         this.#dataFim = criaHorario(dataDaConsulta, horaFinal);
     }
 
+    static createFrom(cpf, dataConsulta, dataFim) {
+        this.#cpf = new CPF(cpf);
+        this.#dataConsulta = dataConsulta;
+        this.#dataFim = dataFim;
+    }
+
     get CPF() {
-        return this.#cpf;
+        return this.#cpf.CPF;
     }
 
     get data_da_consulta() {
@@ -79,4 +85,4 @@ class Consulta {
 
 }
 
-export default { Consulta };
+export default Consulta;

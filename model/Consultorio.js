@@ -30,10 +30,10 @@ class Consultorio {
         return this.#cadastros.entries();
     }
 
-    /* Cadastra um Paciente no mapa do consultório.
-     * @param String contendo os 11 dígitos de um CPF válido para o Paciente.
-     * @param String de tamanho mínimo 5 referente ao nome do paciente.
-     * @param String contendo a data de nascimento do paciente, no formato "DD/MM/AAAA".
+    /** Cadastra um Paciente no mapa do consultório.
+     * @param {String} cpf contendo os 11 dígitos de um CPF válido para o Paciente.
+     * @param {String} nome de tamanho mínimo 5 referente ao nome do paciente.
+     * @param {String} dataNascimento contendo a data de nascimento do paciente, no formato "DD/MM/AAAA".
      * @return Um booleano confirmando se o paciente foi cadastrado com sucesso.
      */
     cadastrar(cpf, nome, dataNascimento) {
@@ -44,12 +44,11 @@ class Consultorio {
             }
         }
         this.#cadastros.set(novoPaciente,[]);
-        console.log(this.#cadastros);
         return true;
     }
 
-    /* Remove um Paciente do mapa do consultório.
-     * @param String contendo os 11 dígitos de um CPF válido para o Paciente.
+    /** Remove um Paciente do mapa do consultório.
+     * @param {String} cpf contendo os 11 dígitos de um CPF válido para o Paciente.
      * @return Um booleano confirmando se o paciente foi retirado do mapa com sucesso.
      */
     descadastrar(cpf) {
@@ -70,8 +69,8 @@ class Consultorio {
         } return false;
     }
 
-    /* Busca um paciente pelo seu CPF dentro do mapa de cadastros do consultório.
-     * @param Uma String correspondente ao CPF do paciente buscado.
+    /** Busca um paciente pelo seu CPF dentro do mapa de cadastros do consultório.
+     * @param {String} cpf Uma String correspondente ao CPF do paciente buscado.
      * @return Um objeto Paciente se algum com o CPF passado estiver presente nas chaves do mapa, ou undefined caso contrário.
      */
     buscarPaciente(cpf) {
@@ -88,15 +87,15 @@ class Consultorio {
         } return false;
     }
 
-    /* Adiciona uma consulta ao cadastro do paciente no Consultório.
+    /** Adiciona uma consulta ao cadastro do paciente no Consultório.
      * Os parâmetros são todos em forma de String, e a função lançará um InvalidInputError caso algum não esteja adequado.
      * Não admite um agendamento caso exista alguma consulta já agendada.
      * Não permite agendamento caso os horários estejam fora do limite de funcionamento do consultório.
      *
-     * @param String correspondente aos 11 dígitos do CPF do paciente buscado.
-     * @param String correspondente à data da consulta a ser agendada. Formato "DD/MM/AAAA".
-     * @param String contendo o horário inicial da consulta. Formato "HHmm".
-     * @param String contendo o horário de término da consulta. Formato "HHmm".
+     * @param {String} cpf correspondente aos 11 dígitos do CPF do paciente buscado.
+     * @param {String} data correspondente à data da consulta a ser agendada. Formato "DD/MM/AAAA".
+     * @param {String} horaInicial contendo o horário inicial da consulta. Formato "HHmm".
+     * @param {String} horaFinal contendo o horário de término da consulta. Formato "HHmm".
      * @return Um booleano indicando se a consulta foi adicionada ao mapa do consultório ou não.
      */
     agendarConsulta(cpf, data, horaInicial, horaFinal) {

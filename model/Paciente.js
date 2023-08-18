@@ -39,7 +39,7 @@ class Paciente {
         return this.#IDADE_MIN;
     }
 
-    static criaFrom(objeto) {
+    static createFrom(objeto) {
         this.#cpf = objeto.cpf;
         this.#dataNascimento = objeto.dataNascimento;
         this.#nome = objeto.nome;

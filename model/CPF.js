@@ -54,4 +54,4 @@ class CPF {
     }
 }
 
-export default { CPF };
+export default CPF;
