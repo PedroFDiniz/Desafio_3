@@ -39,6 +39,12 @@ class Paciente {
         return this.#IDADE_MIN;
     }
 
+    static criaFrom(objeto) {
+        this.#cpf = objeto.cpf;
+        this.#dataNascimento = objeto.dataNascimento;
+        this.#nome = objeto.nome;
+    }
+
     equals(outroPaciente) {
         return this.CPF.equals(outroPaciente.CPF);
     }
@@ -54,3 +60,5 @@ class Paciente {
         return resultado;
     }
 }
+
+export default Paciente;

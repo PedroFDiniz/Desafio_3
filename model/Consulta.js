@@ -78,3 +78,5 @@ class Consulta {
     }
 
 }
+
+export default { Consulta };

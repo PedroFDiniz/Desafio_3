@@ -53,3 +53,5 @@ class CPF {
         return cpf;
     }
 }
+
+export default { CPF };

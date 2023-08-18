@@ -150,3 +150,5 @@ class Consultorio {
 
     }
 }
+
+export default Consultorio;
